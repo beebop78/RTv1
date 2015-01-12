@@ -6,7 +6,7 @@
 /*   By: rcargou <rcargou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/11 19:47:44 by rcargou           #+#    #+#             */
-/*   Updated: 2015/01/11 21:38:18 by rcargou          ###   ########.fr       */
+/*   Updated: 2015/01/12 12:36:13 by rcargou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,9 @@ double			get_sphere_t(t_ray ray, t_sphere sphere)
 	b = rcm_dotproduct(org, ray.raydir);
 	c = -sphere.radius * -sphere.radius + rcm_vecnorme(org) * rcm_vecnorme(org);
 	t = rcm_min(rcm_2dequation(0.25, b, c, &nsolutions), nsolutions);
-	return (t);
+	if (nsolutions)
+		return (&t);
+	return (NULL);
 }
 
 t_point			get_sphere_normal(t_ray ray, t_sphere sphere, t_point intersection)

@@ -6,7 +6,7 @@
 /*   By: rcargou <rcargou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/11 15:18:17 by rcargou           #+#    #+#             */
-/*   Updated: 2015/01/11 21:35:33 by rcargou          ###   ########.fr       */
+/*   Updated: 2015/01/12 12:49:24 by rcargou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,6 @@ typedef struct			s_sphere
 	int					radius;
 	t_matiere			matiere;
 	unsigned int		color;
-	double				(*gett)(t_ray, struct s_sphere);
-	t_point				(*getnormal)(t_ray, struct s_sphere, t_point t);
 	struct s_sphere		*next;
 }						t_sphere;
 typedef struct			s_plan
@@ -40,14 +38,13 @@ typedef struct			s_plan
 	t_point				planpos;
 	t_point				plannormal;
 	unsigned int		color;
-	double				(*gett)(t_ray, struct s_plan);
-	t_point				(*getnormal)(t_ray, struct s_plan);
 	struct s_plan		*next;
 }						t_plan;
 typedef struct			s_spot
 {
 	t_point				spotpos;
 	unsigned int		color;
+	struct s_spot		*next;
 }						t_spot;
 typedef struct			s_scene
 {
@@ -62,5 +59,6 @@ typedef struct			s_intersection
 	t_point				interpos;
 	t_point				normal;
 	t_matiere			*matiere;
+	unsigned int		color;
 }						t_intersection;
 #endif
