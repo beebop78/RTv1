@@ -6,13 +6,13 @@
 /*   By: rcargou <rcargou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/11 18:59:53 by rcargou           #+#    #+#             */
-/*   Updated: 2015/01/12 14:06:29 by rcargou          ###   ########.fr       */
+/*   Updated: 2015/01/12 18:11:05 by rcargou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 
-char		*reader(char *path)
+static char		*reader(char *path)
 {
 	static int		fd = 0;
 	char			*str;
@@ -31,7 +31,7 @@ char		*reader(char *path)
 	return (str);
 }
 
-t_scene		parsing(char *path)
+t_scene			parsing(char *path)
 {
 	t_scene		new;
 	char		*str;
@@ -39,6 +39,8 @@ t_scene		parsing(char *path)
 	int			camok;
 
 	camok = 0;
+	new.spheres = NULL;
+	new.spots = NULL;
 	while ((str = reader(path)) != NULL)
 	{
 		splited_str = ft_strsplit(str, ' ');
@@ -47,12 +49,9 @@ t_scene		parsing(char *path)
 		else if (!ft_strcmp(splited_str[0], "SPOT"))
 			newspot(&new, splited_str);
 		else if (!ft_strcmp(splited_str[0], "CAMERA"))
-			camok += newcamera(&nez, splited_str);
+			camok += newcamera(&new, splited_str);
 	}
 	if (!camok)
-	{
-		ft_putendl("Error : No camera set in input file");
 		exit(0);
-	}
 	return (new);
 }
