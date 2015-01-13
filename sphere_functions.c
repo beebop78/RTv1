@@ -6,13 +6,13 @@
 /*   By: rcargou <rcargou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/11 19:47:44 by rcargou           #+#    #+#             */
-/*   Updated: 2015/01/12 20:00:39 by rcargou          ###   ########.fr       */
+/*   Updated: 2015/01/13 13:14:44 by rcargou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 
-double			get_sphere_t(t_ray ray, t_sphere sphere, int dist)
+double				get_sphere_t(t_ray ray, t_sphere sphere, int dist)
 {
 	double		t1;
 	double		t2;
@@ -37,7 +37,33 @@ double			get_sphere_t(t_ray ray, t_sphere sphere, int dist)
 	return (-b - delta);
 }
 
-t_point			get_sphere_normal(t_ray ray, t_sphere sphere, t_point intersection)
+t_point				get_sphere_normal(t_ray ray, t_sphere sphere, t_point intersection)
 {
-	return (rcm_vecscalarfactor(rcm_vecsum(intersection, rcm_vecneg(sphere.spherepos)), 1.0f / sphere.radius));
+	return (rcm_vecscalarfactor(rcm_vecsum(intersection,
+		rcm_vecneg(sphere.spherepos)), 1.0f / sphere.radius));
 }
+
+t_intersection		*spheres_cross(t_scene scene, t_ray ray, int *maxdist)
+{
+	double					t;
+	t_instersection			*intersection;
+	t_spheres				*cross;
+
+	cross = scene.spheres
+	intersection = NULL;
+	while (cross)
+	{
+		t = get_sphere_t(ray, *cross, *maxdist);
+		if (t < *maxdist)
+		{
+			if (intersection == NULL)
+				intersection = malloc(sizeof(t_intersection));
+			*intersection = file_intersection(t, ray, cross->color, cross->matiere);
+			intersection->normal = get_sphere_normal(ray, *cross, *intersection);
+			*maxdist = t;
+		}
+		cross = cross->next;
+	}
+	return (intersection);
+}
+
