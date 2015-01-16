@@ -6,7 +6,7 @@
 /*   By: rcargou <rcargou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/11 14:32:06 by rcargou           #+#    #+#             */
-/*   Updated: 2015/01/13 12:40:43 by rcargou          ###   ########.fr       */
+/*   Updated: 2015/01/16 00:54:37 by rcargou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,29 +17,46 @@
 # include "trente/trente.h"
 # include "object.h"
 # include "mlx.h"
+# include <math.h>
 # include <stdlib.h>
 # include <sys/stat.h>
 # include <fcntl.h>
 # include <stdio.h>
-# define WIN_X 400
-# define WIN_Y 300
-# define N_FORMS 1
+# define WIN_X 900
+# define WIN_Y 600
+# define N_FORMS 2
 
+typedef struct			s_img
+{
+	void				*img;
+	char				*img_addr;
+	int					bytesperpix;
+	int					pixperline;
+	int					endian;
+}						t_img;
 typedef struct			s_env
 {
 	void				*mlx;
 	void				*win;
 	t_scene				scene;
-	void				*img;
-	char				*img_addr;
+	t_img				image;
 }						t_env;
 void					newsphere(t_scene *scene, char **str);
-double					get_sphere_t(t_ray ray, t_sphere sphere, int dist);
+double					get_sphere_t(t_ray ray, t_sphere sphere, double dist);
 t_point					get_sphere_normal(t_ray ray, t_sphere sphere, t_point i);
 void					newspot(t_scene *scene, char **str);
 int						newcamera(t_scene *scene, char **str);
 int						get_next_line(int fd, char **str);
 t_scene					parsing(char *path);
 t_intersection			file_intersection(double t, t_ray ray, int color, t_matiere matiere);
-t_intersection			*spheres_cross(t_scene scene, t_ray ray);
+t_intersection			*spheres_cross(t_scene scene, t_ray ray, double *c);
+int						get_light(t_intersection *intersection, t_env env);
+t_intersection			*get_intersection(t_env env, t_ray ray,
+						t_intersection *(**f)(t_scene, t_ray, double*));
+void					newsphere(t_scene *scene, char **str);
+void					ft_put_pxl_img(int x, int y, t_env *env, int color);
+t_matiere				matiere_init(char *str);
+void					display_vector(t_point vec);
+void					newplan(t_scene *scene, char **str);
+t_intersection			*plans_cross(t_scene scene, t_ray ray, double *maxdist);
 #endif

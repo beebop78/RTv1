@@ -6,59 +6,55 @@
 /*   By: rcargou <rcargou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/12 21:53:36 by rcargou           #+#    #+#             */
-/*   Updated: 2015/01/13 14:31:10 by rcargou          ###   ########.fr       */
+/*   Updated: 2015/01/16 17:47:38 by rcargou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 
-void				init_func_tab(t_intersection»·»···»···»···(*f[])(t_scene, t_ray, double);)
+void				init_func_tab(t_intersection *(**f)(t_scene, t_ray, double*))
 {
 	f[0] = spheres_cross;
+	f[1] = plans_cross;
 }
 
-t_intersection		file_intersection(double t, t_ray ray, int color, t_matiere matiere)
+t_intersection		file_intersection(double t, t_ray ray, int color, t_matiere matiere1)
 {
 	t_intersection			intersection;
 
-	intersection.interpos = rcm_vecsum(rcm_vecscalarfactor(ray.raydir, t), ray.pos);
-	intersection.matiere = matiere;
+	intersection.interpos = rcm_vecsum(rcm_vecscalarfactor(ray.raydir, t), ray.raypos);
+	intersection.matiere = matiere1;
 	intersection.color = color;
 	intersection.dist = t;
 	return (intersection);
 }
 
 t_intersection		*get_intersection(t_env env, t_ray ray,
-		t_intersection»·»···»···»···(*f[])(t_scene, t_ray, double*))
+	t_intersection *(*f[])(t_scene, t_ray, double*))
 {
 	int					i;
 	double				maxdist;
 	t_intersection		*intersection;
 	t_intersection		*object;
 
+	i = 0;
+	object = NULL;
 	maxdist = 2000;
 	while (i < N_FORMS)
 	{
+		intersection = NULL;
 		intersection = f[i](env.scene, ray, &maxdist);
 		if(intersection != NULL)
 			object = intersection;
+		i++;
 	}
 	return (object);
 }
 
-int					get_light(t_intersection *intersection, t_env env)
+void				render(t_env env, int x, int y)
 {
-	t_spot		*cross
-	int			color;
 
-	color = 0;
-	cross = env.scene.spots
-	while (cross != NULL)
-	{
 
-		cross = cross->next;
-	}
-	return (color);
 }
 
 void				raytracer(t_env env)
@@ -68,23 +64,28 @@ void				raytracer(t_env env)
 	int					color;
 	t_ray				ray;
 	t_intersection		*intersection;
-	t_intersection		*(*f[N_FORMS])(t_scene, t_ray, double);
+	t_intersection		*(**f)(t_scene, t_ray, double*);
 
-	color = 0;
-	x = -1;
 	y = -1;
 	ray.raydir = env.scene.camera.cameraray.raydir;
+	f = malloc(sizeof(*f) * N_FORMS);
 	init_func_tab(f);
-	while (++x < WIN_X)
+	env.scene.func = f;
+	while (++y < WIN_Y)
 	{
-		while (++y < WIN_Y)
+		x = -1;
+		while (++x < WIN_X)
 		{
-			ray.raypos = rcm_vecsum(env.scene.viewplaneupleft,
-				rcm_vecscalarfactor(env.scene.camera.cameraright, x));
+			color = 0;
+			ray.raypos = rcm_vecsum(env.scene.camera.viewplaneupleft,
+				rcm_vecscalarfactor(env.scene.camera.cameraright, (x - WIN_X)));
 			ray.raypos = rcm_vecsum(ray.raypos,
-				rcm_vecscalarfactor(env.scene.camera.cameraup, -y));
-			intersection = get_intersection(env, ray);
-			color = get_light(intersection, t_env env);
+				rcm_vecscalarfactor(env.scene.camera.cameraup, (y - WIN_Y)));
+			intersection = get_intersection(env, ray, f);
+			if (intersection)
+				color = get_light(intersection, env);
+			ft_put_pxl_img(x, y, &env, color);
+			mlx_pixel_put(env.mlx, env.win, x, y, color);
 		}
 	}
 }
