@@ -6,7 +6,7 @@
 /*   By: rcargou <rcargou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/13 17:30:02 by rcargou           #+#    #+#             */
-/*   Updated: 2015/01/14 15:24:56 by rcargou          ###   ########.fr       */
+/*   Updated: 2015/01/17 14:49:53 by rcargou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ int			display_img(t_env *env)
 void		mlx(t_env env)
 {
 	env.mlx = mlx_init();
-	env.win = mlx_new_window(env.mlx, WIN_X, WIN_Y, "yamete kolasai");
-	env.image.img = mlx_new_image(env.mlx, WIN_X, WIN_Y);
+	env.win = mlx_new_window(env.mlx, WIN_X - 10, WIN_Y - 10, "yamete kolasai");
+	env.image.img = mlx_new_image(env.mlx, WIN_X - 10, WIN_Y - 10);
 	env.image.img_addr = mlx_get_data_addr(env.image.img,
 	&(env.image.bytesperpix), &(env.image.pixperline), &(env.image.endian));
 	raytracer(env);

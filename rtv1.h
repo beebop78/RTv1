@@ -6,7 +6,7 @@
 /*   By: rcargou <rcargou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/11 14:32:06 by rcargou           #+#    #+#             */
-/*   Updated: 2015/01/16 00:54:37 by rcargou          ###   ########.fr       */
+/*   Updated: 2015/01/17 15:44:00 by rcargou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 # include <fcntl.h>
 # include <stdio.h>
 # define WIN_X 900
-# define WIN_Y 600
+# define WIN_Y 700
 # define N_FORMS 2
 
 typedef struct			s_img
@@ -59,4 +59,7 @@ t_matiere				matiere_init(char *str);
 void					display_vector(t_point vec);
 void					newplan(t_scene *scene, char **str);
 t_intersection			*plans_cross(t_scene scene, t_ray ray, double *maxdist);
+void					snailfills(int *coord, int t);
+void					anti_aliasing(t_env env);
+t_point					reflected_ray(t_point lightray, t_point normal);
 #endif

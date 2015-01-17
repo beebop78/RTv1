@@ -6,7 +6,7 @@
 /*   By: rcargou <rcargou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/12 21:53:36 by rcargou           #+#    #+#             */
-/*   Updated: 2015/01/16 17:47:38 by rcargou          ###   ########.fr       */
+/*   Updated: 2015/01/17 14:57:10 by rcargou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,41 +51,67 @@ t_intersection		*get_intersection(t_env env, t_ray ray,
 	return (object);
 }
 
-void				render(t_env env, int x, int y)
+void				render(t_env env, int x1, int y1)
 {
+	int color;
+	t_ray ray;
+	t_intersection *intersection;
 
+	ray.raydir = env.scene.camera.cameraray.raydir; 
+	intersection = NULL;
+	color = 0;
+	ray.raypos = rcm_vecsum(env.scene.camera.viewplaneupleft,
+	rcm_vecscalarfactor(env.scene.camera.cameraright, (x1 - WIN_X)));
+	ray.raypos = rcm_vecsum(ray.raypos,
+	rcm_vecscalarfactor(env.scene.camera.cameraup, (y1 - WIN_Y)));
+	intersection = get_intersection(env, ray, env.scene.func);
+	if (intersection)
+		color = get_light(intersection, env);
+	ft_put_pxl_img(x1 - 4, y1, &env, color);
+	mlx_pixel_put(env.mlx, env.win, x1 - 4, y1, color);
+}
+void				call_render(t_env env, int *coord, int t, int ty)
+{
+	int x;
+	int y;
 
+	y = -1;
+	coord[0] = 0;
+	coord[1] = 0;
+	snailfills(NULL, 1);
+	while (++y < ((WIN_Y) / 4))
+	{
+		x = -1;
+		while (++x < ((WIN_X) / 4))
+		{
+			snailfills(coord, 0);
+			render(env, coord[0] + t, coord[1] + ty);
+		}
+	}
 }
 
 void				raytracer(t_env env)
 {
-	int					x;
-	int					y;
-	int					color;
-	t_ray				ray;
-	t_intersection		*intersection;
+	int					*coord;
 	t_intersection		*(**f)(t_scene, t_ray, double*);
+	int t;
+	int ty;
 
-	y = -1;
-	ray.raydir = env.scene.camera.cameraray.raydir;
+	t = 1;
+	ty = 0;
+	coord = ft_memalloc(32);
 	f = malloc(sizeof(*f) * N_FORMS);
 	init_func_tab(f);
 	env.scene.func = f;
-	while (++y < WIN_Y)
+	while (ty < 4)
 	{
-		x = -1;
-		while (++x < WIN_X)
+		t = 0;
+		while (t < 4)
 		{
-			color = 0;
-			ray.raypos = rcm_vecsum(env.scene.camera.viewplaneupleft,
-				rcm_vecscalarfactor(env.scene.camera.cameraright, (x - WIN_X)));
-			ray.raypos = rcm_vecsum(ray.raypos,
-				rcm_vecscalarfactor(env.scene.camera.cameraup, (y - WIN_Y)));
-			intersection = get_intersection(env, ray, f);
-			if (intersection)
-				color = get_light(intersection, env);
-			ft_put_pxl_img(x, y, &env, color);
-			mlx_pixel_put(env.mlx, env.win, x, y, color);
+			call_render(env, coord, t, ty);
+			t++;
 		}
+		ty++;
 	}
+	anti_aliasing(env);
 }
