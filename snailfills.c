@@ -6,7 +6,7 @@
 /*   By: rcargou <rcargou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/16 18:16:14 by rcargou           #+#    #+#             */
-/*   Updated: 2015/01/17 14:48:27 by rcargou          ###   ########.fr       */
+/*   Updated: 2015/01/17 16:11:39 by rcargou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void snailfills(int *coord, int r)
 		xmax = WIN_X  - 8;
 		xmin = 0;
 		ymin = 0;
-		ymax = WIN_Y;
+		ymax = WIN_Y - 20;
 		return ;
 	}
 	if ((coord[1]) <= ymin + 4&& (coord[0]) < xmax)

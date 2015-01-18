@@ -6,7 +6,7 @@
 /*   By: rcargou <rcargou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/17 01:54:36 by rcargou           #+#    #+#             */
-/*   Updated: 2015/01/17 14:35:07 by rcargou          ###   ########.fr       */
+/*   Updated: 2015/01/17 18:22:53 by rcargou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void anti_aliasing(t_env env)
 		{
 			c1 = get_color(env.image, x, y, 0);
 			c2 = get_color(env.image, x - 1, y - 1, 0);
-			if (color_diff(c1, c2) > 200)
+			if (color_diff(c1, c2) > 100)
 			{
 				mlx_pixel_put(env.mlx, env.win, x, y, color_average(c1, c2));
 				ft_put_pxl_img(x, y, &env, color_average(c1, c2));

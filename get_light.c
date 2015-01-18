@@ -6,7 +6,7 @@
 /*   By: rcargou <rcargou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/13 17:21:08 by rcargou           #+#    #+#             */
-/*   Updated: 2015/01/17 15:30:53 by rcargou          ###   ########.fr       */
+/*   Updated: 2015/01/17 16:04:39 by rcargou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ int					get_light(t_intersection *intersection, t_env env)
 		angle = rcm_dotproduct(rcm_vecneg(intersection->normal), lightvector);
 			color = color_add((cross->color & color), color_setbright(intersection->color,
 				angle - 0.5 * shadow_ray(*intersection, env, *cross)));
+		color = specular(*intersection, *cross, color);
 		cross = cross->next;
 	}
 	free(intersection);

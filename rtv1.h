@@ -6,7 +6,7 @@
 /*   By: rcargou <rcargou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/11 14:32:06 by rcargou           #+#    #+#             */
-/*   Updated: 2015/01/17 15:44:00 by rcargou          ###   ########.fr       */
+/*   Updated: 2015/01/17 16:04:01 by rcargou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,4 +62,5 @@ t_intersection			*plans_cross(t_scene scene, t_ray ray, double *maxdist);
 void					snailfills(int *coord, int t);
 void					anti_aliasing(t_env env);
 t_point					reflected_ray(t_point lightray, t_point normal);
+int						specular(t_intersection intersection, t_spot spot, int color);
 #endif
