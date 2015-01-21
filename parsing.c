@@ -6,7 +6,7 @@
 /*   By: rcargou <rcargou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/11 18:59:53 by rcargou           #+#    #+#             */
-/*   Updated: 2015/01/15 17:41:54 by rcargou          ###   ########.fr       */
+/*   Updated: 2015/01/19 12:42:39 by rcargou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ t_scene			parsing(char *path)
 	new.spheres = NULL;
 	new.spots = NULL;
 	new.plans = NULL;
+	new.cylinders = NULL;
 	while ((str = reader(path)) != NULL)
 	{
 		splited_str = ft_strsplit(str, ' ');
@@ -53,6 +54,8 @@ t_scene			parsing(char *path)
 			newplan(&new, splited_str);
 		else if (!ft_strcmp(splited_str[0], "CAMERA"))
 			camok += newcamera(&new, splited_str);
+		else if (!ft_strcmp(splited_str[0], "CYLINDER"))
+			newcylinder(&new, splited_str);
 	}
 	if (!camok)
 		exit(0);

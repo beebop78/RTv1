@@ -6,7 +6,7 @@
 /*   By: rcargou <rcargou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/12 21:53:36 by rcargou           #+#    #+#             */
-/*   Updated: 2015/01/17 14:57:10 by rcargou          ###   ########.fr       */
+/*   Updated: 2015/01/20 12:48:12 by rcargou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ void				init_func_tab(t_intersection *(**f)(t_scene, t_ray, double*))
 {
 	f[0] = spheres_cross;
 	f[1] = plans_cross;
+	f[2] = cylinder_cross;
 }
 
 t_intersection		file_intersection(double t, t_ray ray, int color, t_matiere matiere1)
@@ -45,8 +46,12 @@ t_intersection		*get_intersection(t_env env, t_ray ray,
 		intersection = NULL;
 		intersection = f[i](env.scene, ray, &maxdist);
 		if(intersection != NULL)
+		{
+			if (object)
+				free(object);
 			object = intersection;
-		i++;
+		}
+			i++;
 	}
 	return (object);
 }

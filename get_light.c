@@ -6,13 +6,13 @@
 /*   By: rcargou <rcargou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/13 17:21:08 by rcargou           #+#    #+#             */
-/*   Updated: 2015/01/17 16:04:39 by rcargou          ###   ########.fr       */
+/*   Updated: 2015/01/20 18:49:53 by rcargou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 
-int				shadow_ray(t_intersection intersection, t_env env, t_spot spot)
+int				shadow_ray(t_intersection intersection, t_env env, t_spot spot, int option)
 {
 	t_ray				ray;
 	t_intersection		*new;
@@ -26,7 +26,7 @@ int				shadow_ray(t_intersection intersection, t_env env, t_spot spot)
 	if (new)
 	{
 		len2 = rcm_vecsquarelength(rcm_vecsub(spot.spotpos, new->interpos));
-		if (new->object_add != intersection.object_add && (len2 < len1))
+		if ((new->object_add != intersection.object_add || option) && (len2 < len1))
 		{
 			free(new);
 			return (1);
@@ -42,17 +42,19 @@ int					get_light(t_intersection *intersection, t_env env)
 	int			color;
 	t_point		lightvector;
 	double		angle;
-
+	double		shadowray;
 	color = 0;
 	cross = env.scene.spots;
 	while (cross->next)
 	{
 		lightvector = rcm_vecnormalize(rcm_vecsum(intersection->interpos,
 			rcm_vecneg(cross->spotpos)));
+		shadowray = 0.7 * shadow_ray(*intersection, env, *cross, 0);
 		angle = rcm_dotproduct(rcm_vecneg(intersection->normal), lightvector);
 			color = color_add((cross->color & color), color_setbright(intersection->color,
-				angle - 0.5 * shadow_ray(*intersection, env, *cross)));
-		color = specular(*intersection, *cross, color);
+				angle - shadowray));
+		color = color_setbright(color, 1.0f / (intersection->dist) * 20 * ATT);
+		color = color_add(color, specular(*intersection, *cross, 0, env));
 		cross = cross->next;
 	}
 	free(intersection);

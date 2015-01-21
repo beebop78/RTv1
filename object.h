@@ -6,14 +6,14 @@
 /*   By: rcargou <rcargou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/12 20:44:34 by rcargou           #+#    #+#             */
-/*   Updated: 2015/01/15 20:18:55 by rcargou          ###   ########.fr       */
+/*   Updated: 2015/01/20 19:15:11 by rcargou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef OBJECT_H
 # define OBJECT_H
 # include "rc_lib/rc_math/rc_math.h"
-# define N_FORMS 2
+# define N_FORMS 3
 typedef struct			s_ray
 {
 	t_point				raypos;
@@ -64,11 +64,29 @@ typedef struct			s_intersection
 	int					color;
 	void				*object_add;
 }						t_intersection;
+typedef struct			s_cylinder
+{
+	t_ray				lign;
+	t_matiere			matiere;
+	int					color;
+	struct s_cylinder	*next;
+	int					radius;
+}						t_cylinder;
+typedef struct			s_cone
+{
+	t_ray				lign;
+	t_matiere			matiere;
+	int					color;
+	struct s_cone		*next;
+	int					radius;
+}						t_cone;
 typedef struct			s_scene
 {
     t_sphere			*spheres;
     t_plan				*plans;
-    t_camera			camera;
+	t_cylinder			*cylinders;
+	t_cone				*cones;
+	t_camera			camera;
     struct s_spot		*spots;
 	t_intersection		*(**func)(struct s_scene, t_ray, double*);
 }						t_scene;

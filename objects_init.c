@@ -6,11 +6,21 @@
 /*   By: rcargou <rcargou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/11 19:24:23 by rcargou           #+#    #+#             */
-/*   Updated: 2015/01/15 17:25:38 by rcargou          ###   ########.fr       */
+/*   Updated: 2015/01/18 19:00:10 by rcargou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
+
+t_point			get_vec(char **str)
+{
+	t_point new;
+
+	new.x = ft_atoi(str[0]);
+	new.y = ft_atoi(str[1]);
+	new.z = ft_atoi(str[2]);
+	return (new);
+}
 
 t_matiere	matiere_init(char *str)
 {

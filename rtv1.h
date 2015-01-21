@@ -6,7 +6,7 @@
 /*   By: rcargou <rcargou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/11 14:32:06 by rcargou           #+#    #+#             */
-/*   Updated: 2015/01/17 16:04:01 by rcargou          ###   ########.fr       */
+/*   Updated: 2015/01/20 18:50:04 by rcargou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@
 # include <stdio.h>
 # define WIN_X 900
 # define WIN_Y 700
-# define N_FORMS 2
+# define N_FORMS 3
+# define ATT 8
 
 typedef struct			s_img
 {
@@ -62,5 +63,10 @@ t_intersection			*plans_cross(t_scene scene, t_ray ray, double *maxdist);
 void					snailfills(int *coord, int t);
 void					anti_aliasing(t_env env);
 t_point					reflected_ray(t_point lightray, t_point normal);
-int						specular(t_intersection intersection, t_spot spot, int color);
+int						specular(t_intersection intersection, t_spot spot, int color, t_env env);
+t_point					get_vec(char **str);
+void					newcylinder (t_scene *scene, char **str);
+t_point					get_cylinder_normal(t_ray ray, t_cylinder cylinder, t_point intersection);
+t_intersection			*cylinder_cross(t_scene scene, t_ray ray, double *maxdist);
+int						shadow_ray(t_intersection intersection, t_env env, t_spot spot, int a);
 #endif
