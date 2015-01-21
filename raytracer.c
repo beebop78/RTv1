@@ -6,7 +6,7 @@
 /*   By: rcargou <rcargou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/12 21:53:36 by rcargou           #+#    #+#             */
-/*   Updated: 2015/01/20 12:48:12 by rcargou          ###   ########.fr       */
+/*   Updated: 2015/01/21 18:14:39 by rcargou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void				init_func_tab(t_intersection *(**f)(t_scene, t_ray, double*))
 	f[0] = spheres_cross;
 	f[1] = plans_cross;
 	f[2] = cylinder_cross;
+	f[3] = cone_cross;
 }
 
 t_intersection		file_intersection(double t, t_ray ray, int color, t_matiere matiere1)

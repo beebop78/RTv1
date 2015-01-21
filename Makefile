@@ -6,7 +6,7 @@
 #    By: rcargou <rcargou@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/01/16 16:45:04 by rcargou           #+#    #+#              #
-#    Updated: 2015/01/20 19:15:56 by rcargou          ###   ########.fr        #
+#    Updated: 2015/01/21 11:31:52 by rcargou          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ HEADERS = object.h rtv1.h rc_lib/rc_math/rc_math.h rc_lib/libft/libft.h trente/t
 		  rc_lib/rc_color/color.h mlx.h
 
 LIB = rc_lib/libft/libft.a rc_lib/rc_math/librcmath.a rc_lib/rc_color/libcolor.a -lm \
-	  -L./ libmlx_x86_64.a -lX11 -lXext -lm
+	  -L/usr/X11/lib  -lmlx -lX11 -lXext -lm
 
 All : $(NAME)
 

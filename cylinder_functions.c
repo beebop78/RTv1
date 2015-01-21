@@ -6,7 +6,7 @@
 /*   By: rcargou <rcargou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/18 14:29:15 by rcargou           #+#    #+#             */
-/*   Updated: 2015/01/20 19:11:32 by rcargou          ###   ########.fr       */
+/*   Updated: 2015/01/21 17:21:38 by rcargou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void		newcylinder (t_scene *scene, char **str)
 	new->color = ft_atoi(str[9]) << 16;
 	new->color += (ft_atoi(str[10]) << 8);
 	new->color += ft_atoi(str[11]);
+	new->len = ft_atoi(str[12]);
 	new->matiere = matiere_init(str[8]);
 	new->next = malloc(sizeof(t_cylinder));
 	new->next->next = NULL;
@@ -56,7 +57,7 @@ double		get_cylinders_t(t_ray ray, t_cylinder cylinder, double maxdist)
 	delta  = b * b - 4 * a * c;
 	if (delta == 0 && -b / (2 * a) > 0)
 		return (-b / (2 * a));
-	if(delta > 0)
+	if (delta > 0)
 	{
 		delta = sqrt(delta);
 		if ((-b + delta) / (2 * a) > 0 && (-b + delta) / (2 * a) < (-b - delta) / (2 * a))
@@ -76,6 +77,21 @@ t_point			get_cylinder_normal(t_ray ray, t_cylinder cylinder, t_point intersecti
 	return ((rcm_vecnormalize(normal)));
 }
 
+int					finite_check(t_cylinder cylinder, double t, t_ray ray)
+{
+	double		dist;
+	t_point		tmp;
+	t_point interpos;
+	t_point narmol;
+
+	interpos = rcm_vecsum(ray.raypos, rcm_vecscalarfactor(ray.raydir, t));
+	narmol = rcm_vecscalarfactor(get_cylinder_normal(ray, cylinder, interpos), -(cylinder.radius));
+	tmp = rcm_vecsum(interpos, narmol);
+	dist = rcm_vecnorme(rcm_vecsub(cylinder.lign.raypos, tmp));
+	if (dist > (cylinder.len))
+		return (0);
+	return (1);
+}
 
 t_intersection		*cylinder_cross(t_scene scene, t_ray ray, double *maxdist)
 {
@@ -88,7 +104,7 @@ t_intersection		*cylinder_cross(t_scene scene, t_ray ray, double *maxdist)
 	while (cross && cross->next)
 	{
 		t = get_cylinders_t(ray, *cross, *maxdist);
-		if (t < *maxdist)
+		if (t < *maxdist && (finite_check(*cross, t, ray) || cross->len < 0))
 		{
 			if (intersection == NULL)
 				intersection = malloc(sizeof(t_intersection));

@@ -6,14 +6,14 @@
 /*   By: rcargou <rcargou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/12 20:44:34 by rcargou           #+#    #+#             */
-/*   Updated: 2015/01/20 19:15:11 by rcargou          ###   ########.fr       */
+/*   Updated: 2015/01/21 17:53:29 by rcargou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef OBJECT_H
 # define OBJECT_H
 # include "rc_lib/rc_math/rc_math.h"
-# define N_FORMS 3
+# define N_FORMS 4
 typedef struct			s_ray
 {
 	t_point				raypos;
@@ -71,6 +71,7 @@ typedef struct			s_cylinder
 	int					color;
 	struct s_cylinder	*next;
 	int					radius;
+	double				len;
 }						t_cylinder;
 typedef struct			s_cone
 {
@@ -79,6 +80,7 @@ typedef struct			s_cone
 	int					color;
 	struct s_cone		*next;
 	int					radius;
+	double				angle;
 }						t_cone;
 typedef struct			s_scene
 {

@@ -6,7 +6,7 @@
 /*   By: rcargou <rcargou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/11 18:59:53 by rcargou           #+#    #+#             */
-/*   Updated: 2015/01/19 12:42:39 by rcargou          ###   ########.fr       */
+/*   Updated: 2015/01/21 18:09:04 by rcargou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ t_scene			parsing(char *path)
 			camok += newcamera(&new, splited_str);
 		else if (!ft_strcmp(splited_str[0], "CYLINDER"))
 			newcylinder(&new, splited_str);
+		else if (!ft_strcmp(splited_str[0], "CONE"))
+			newcone(&new, splited_str);
 	}
 	if (!camok)
 		exit(0);

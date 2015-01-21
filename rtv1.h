@@ -6,7 +6,7 @@
 /*   By: rcargou <rcargou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/11 14:32:06 by rcargou           #+#    #+#             */
-/*   Updated: 2015/01/20 18:50:04 by rcargou          ###   ########.fr       */
+/*   Updated: 2015/01/21 18:09:29 by rcargou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include "rc_lib/libft/libft.h"
 # include "trente/trente.h"
 # include "object.h"
-# include "mlx.h"
+# include <mlx.h>
 # include <math.h>
 # include <stdlib.h>
 # include <sys/stat.h>
@@ -24,7 +24,7 @@
 # include <stdio.h>
 # define WIN_X 900
 # define WIN_Y 700
-# define N_FORMS 3
+# define N_FORMS 4
 # define ATT 8
 
 typedef struct			s_img
@@ -42,6 +42,7 @@ typedef struct			s_env
 	t_scene				scene;
 	t_img				image;
 }						t_env;
+t_intersection			*cone_cross(t_scene scene, t_ray ray, double *maxdist);
 void					newsphere(t_scene *scene, char **str);
 double					get_sphere_t(t_ray ray, t_sphere sphere, double dist);
 t_point					get_sphere_normal(t_ray ray, t_sphere sphere, t_point i);
@@ -69,4 +70,5 @@ void					newcylinder (t_scene *scene, char **str);
 t_point					get_cylinder_normal(t_ray ray, t_cylinder cylinder, t_point intersection);
 t_intersection			*cylinder_cross(t_scene scene, t_ray ray, double *maxdist);
 int						shadow_ray(t_intersection intersection, t_env env, t_spot spot, int a);
+void					newcone (t_scene *scene, char **str);
 #endif

@@ -6,7 +6,7 @@
 /*   By: rcargou <rcargou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/17 15:31:02 by rcargou           #+#    #+#             */
-/*   Updated: 2015/01/20 16:23:57 by rcargou          ###   ########.fr       */
+/*   Updated: 2015/01/21 18:15:50 by rcargou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ int				specular(t_intersection intersection, t_spot spot, int color, t_env env)
 	source = rcm_vecnormalize(rcm_vecsub(intersection.interpos, spot.spotpos));
 	reflected = reflected_ray(source, intersection.normal);
 	triche = (rcm_dotproduct(rcm_vecneg(source), reflected));
-	if (triche < 0)// || shadow_ray(intersection, env, spot, 1))
+	if (triche < 0 || shadow_ray(intersection, env, spot, 0))
 		return (0);
 	return (color_add(color, color_setbright(spot.color,
-		(triche * triche * triche * triche))));
+		(triche * triche * triche * triche * triche))));
 }

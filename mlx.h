@@ -30,8 +30,7 @@
 #ifndef MLX_H
 
 #define	MLX_H
-
-#include <bsd/string.h>
+#include <stdio.h>
 size_t strlcpy(char *dst, const char *src, size_t siz);
 
 void	*mlx_init();
