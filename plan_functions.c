@@ -6,13 +6,13 @@
 /*   By: rcargou <rcargou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/15 14:43:39 by rcargou           #+#    #+#             */
-/*   Updated: 2015/01/16 15:42:01 by rcargou          ###   ########.fr       */
+/*   Updated: 2015/01/22 19:04:49 by rcargou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 
-void				newplan(t_scene *scene, char **str)
+void					newplan(t_scene *scene, char **str)
 {
 	t_plan		*new;
 	int			a;
@@ -49,7 +49,8 @@ double					get_plan_t(t_ray ray, t_plan *plan, double dist)
 	dv = rcm_dotproduct(plan->normal, ray.raydir);
 	if (!dv)
 		return (dist);
-	t = ((-rcm_dotproduct(plan->normal, rcm_vecsum(ray.raypos, rcm_vecneg(plan->planpos)))) / dv);
+	t = ((-rcm_dotproduct(plan->normal, rcm_vecsum(ray.raypos,
+			rcm_vecneg(plan->planpos)))) / dv);
 	if (t < 1)
 		return (dist);
 	plan->dv = dv;
@@ -63,8 +64,6 @@ t_point					get_plan_normal(t_plan plan)
 	return (rcm_vecneg(plan.normal));
 }
 
-
-
 t_intersection			*plans_cross(t_scene scene, t_ray ray, double *maxdist)
 {
 	double						t;
@@ -77,20 +76,16 @@ t_intersection			*plans_cross(t_scene scene, t_ray ray, double *maxdist)
 	{
 		t = get_plan_t(ray, cross, *maxdist);
 		if (t < *maxdist && t > 1)
-			{
-				if (intersection == NULL)
-					intersection = malloc(sizeof(t_intersection));
-				*intersection = file_intersection(t, ray, cross->color, cross->matiere);
-				intersection->normal = get_plan_normal(*cross);
-				intersection->object_add = (void *)cross;
-				*maxdist = t;
-			}
+		{
+			if (intersection == NULL)
+				intersection = malloc(sizeof(t_intersection));
+			*intersection = file_intersection(t, ray, cross->color,
+				cross->matiere);
+			intersection->normal = get_plan_normal(*cross);
+			intersection->object_add = (void *)cross;
+			*maxdist = t;
+		}
 		cross = cross->next;
 	}
 	return (intersection);
 }
-
-
-
-
-

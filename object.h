@@ -6,7 +6,7 @@
 /*   By: rcargou <rcargou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/12 20:44:34 by rcargou           #+#    #+#             */
-/*   Updated: 2015/01/21 17:53:29 by rcargou          ###   ########.fr       */
+/*   Updated: 2015/01/22 19:02:17 by rcargou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define OBJECT_H
 # include "rc_lib/rc_math/rc_math.h"
 # define N_FORMS 4
+
 typedef struct			s_ray
 {
 	t_point				raypos;
@@ -84,12 +85,13 @@ typedef struct			s_cone
 }						t_cone;
 typedef struct			s_scene
 {
-    t_sphere			*spheres;
-    t_plan				*plans;
+	t_sphere			*spheres;
+	t_plan				*plans;
 	t_cylinder			*cylinders;
 	t_cone				*cones;
 	t_camera			camera;
-    struct s_spot		*spots;
+	struct s_spot		*spots;
 	t_intersection		*(**func)(struct s_scene, t_ray, double*);
+	double				att;
 }						t_scene;
 #endif

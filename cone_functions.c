@@ -6,13 +6,13 @@
 /*   By: rcargou <rcargou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/20 19:10:41 by rcargou           #+#    #+#             */
-/*   Updated: 2015/01/21 20:54:56 by rcargou          ###   ########.fr       */
+/*   Updated: 2015/01/22 21:41:49 by rcargou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "rtv1.h"
+#include "rtv1.h"
 
-void		newcone (t_scene *scene, char **str)
+void					newcone(t_scene *scene, char **str)
 {
 	t_cone *new;
 
@@ -41,27 +41,27 @@ double					minposvalue(double delta, double *value, double maxdist)
 	double tmp;
 	double tmp2;
 
-    if (delta == 0 && (-value[1] / (2 * value[0])) > 0)
-        return (-value[1] / (2 * value[0]));
-    if (delta < 0)
-        return (maxdist);
-    delta = rcm_sqrt(delta);
-    tmp = (-value[1] + delta) / (2 * value[0]);
-    tmp2 = (-value[1] - delta) / (2 * value[0]);
-    if (tmp < tmp2 && tmp > 0)
-        return (tmp);
-    else if (tmp2 > 0)
-        return (tmp);
-    return (maxdist);
+	if (delta == 0 && (-value[1] / (2 * value[0])) > 0)
+		return (-value[1] / (2 * value[0]));
+	if (delta < 0)
+		return (maxdist);
+	delta = rcm_sqrt(delta);
+	tmp = (-value[1] + delta) / (2 * value[0]);
+	tmp2 = (-value[1] - delta) / (2 * value[0]);
+	if (tmp < tmp2 && tmp > 0)
+		return (tmp);
+	else if (tmp2 > 0)
+		return (tmp2);
+	return (maxdist);
 }
 
-double					get_cone_t(t_ray ray, t_cone cone, double maxdist, double tmp2)
+double					get_cone_t(t_ray ray, t_cone cone, double maxdist,
+							double tmp2)
 {
-	double tmp;
-	t_point deltap;
-	double delta;
-	double value[3];
-	t_point ttmp;
+	double		tmp;
+	t_point		deltap;
+	double		value[4];
+	t_point		ttmp;
 
 	deltap = rcm_vecsub(ray.raydir, rcm_vecscalarfactor(cone.lign.raydir,
 		rcm_dotproduct(ray.raydir, cone.lign.raydir)));
@@ -69,23 +69,20 @@ double					get_cone_t(t_ray ray, t_cone cone, double maxdist, double tmp2)
 	ttmp = deltap;
 	deltap = rcm_vecsub(ray.raypos, cone.lign.raypos);
 	tmp2 = rcm_dotproduct(ray.raydir, cone.lign.raydir);
-	tmp2 *= tmp2;
-	tmp2 = tmp2 * sin(cone.angle) * sin(cone.angle);
-	value[0] = tmp - tmp2;
-
+	value[0] = tmp - (tmp2 * tmp2) * sin(cone.angle) * sin(cone.angle);
 	tmp2 = 2 * cos(cone.angle) * cos(cone.angle);
 	value[1] = tmp2 * (rcm_dotproduct(ttmp, rcm_vecsub(deltap,
-	rcm_vecscalarfactor(cone.lign.raydir, rcm_dotproduct(deltap, cone.lign.raydir)))));
+	rcm_vecscalarfactor(cone.lign.raydir, rcm_dotproduct(deltap,
+		cone.lign.raydir)))));
 	tmp2 = 2 * sin(cone.angle) * sin(cone.angle);
-	value[1] -= tmp2 * rcm_dotproduct(ray.raydir, cone.lign.raydir) * rcm_dotproduct(deltap, cone.lign.raydir);
-
+	value[1] -= tmp2 * rcm_dotproduct(ray.raydir, cone.lign.raydir) *
+		rcm_dotproduct(deltap, cone.lign.raydir);
 	tmp2 = rcm_dotproduct(deltap, cone.lign.raydir);
 	ttmp = rcm_vecsub(deltap, rcm_vecscalarfactor(cone.lign.raydir, tmp2));
-	tmp = rcm_dotproduct(ttmp, ttmp);
-	tmp = tmp * cos(cone.angle) * cos(cone.angle) * 2;
+	tmp = rcm_dotproduct(ttmp, ttmp) * cos(cone.angle) * cos(cone.angle);
 	value[2] = tmp - (tmp2 * tmp2) * sin(cone.angle) * sin(cone.angle);
-	delta = value[1] * value[1] - 4 * value[0] * value[2];
-	return (minposvalue(delta, value, maxdist));
+	value[4] = value[1] * value[1] - 4 * value[0] * value[2];
+	return (minposvalue(value[4], value, maxdist));
 }
 
 t_point					get_cone_normal(t_ray ray, t_cone cone, t_point intersection)
@@ -94,7 +91,7 @@ t_point					get_cone_normal(t_ray ray, t_cone cone, t_point intersection)
 
 	narmol = rcm_vecsub(intersection, cone.lign.raypos);
 	narmol = rcm_vecsub(narmol, rcm_vecproject(narmol, cone.lign.raydir));
-	return (rcm_vecnormalize(narmol));
+	return ((rcm_vecnormalize(narmol)));
 }
 
 t_intersection			*cone_cross(t_scene scene, t_ray ray, double *maxdist)

@@ -6,7 +6,7 @@
 /*   By: rcargou <rcargou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/11 19:47:44 by rcargou           #+#    #+#             */
-/*   Updated: 2015/01/18 16:07:04 by rcargou          ###   ########.fr       */
+/*   Updated: 2015/01/22 19:07:57 by rcargou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void				newsphere(t_scene *scene, char **str)
 		scene->spheres->next = NULL;
 	}
 	tmp = scene->spheres;
-	while(tmp->next)
+	while (tmp->next)
 		tmp = tmp->next;
 	tmp->spherepos.x = ft_atoi(str[1]);
 	tmp->spherepos.y = ft_atoi(str[2]);
@@ -42,18 +42,15 @@ void				newsphere(t_scene *scene, char **str)
 
 double				get_sphere_t(t_ray ray, t_sphere sphere, double dist)
 {
-	double		t1;
-	double		t2;
 	double		b;
 	double		c;
-	double		*tab;
 	double		delta;
-	int			nsolutions;
 	t_point		org;
 
 	org = rcm_vecsum(ray.raypos, rcm_vecneg(sphere.spherepos));
 	b = rcm_dotproduct(org, ray.raydir);
-	c = -sphere.radius * sphere.radius + org.x * org.x + org.y * org.y + org.z * org.z;
+	c = -sphere.radius * sphere.radius + org.x * org.x + org.y *
+		org.y + org.z * org.z;
 	delta = b * b - c;
 	if (delta < 0)
 		return (dist);
@@ -67,10 +64,11 @@ double				get_sphere_t(t_ray ray, t_sphere sphere, double dist)
 	return (dist);
 }
 
-t_point				get_sphere_normal(t_ray ray, t_sphere sphere, t_point intersection)
+t_point				get_sphere_normal(t_ray ray, t_sphere sphere,
+						t_point intersection)
 {
 	return (rcm_vecscalarfactor(rcm_vecsum(intersection,
-		rcm_vecneg(sphere.spherepos)), 1.0f / sphere.radius));
+	rcm_vecneg(sphere.spherepos)), 1.0f / sphere.radius));
 }
 
 t_intersection		*spheres_cross(t_scene scene, t_ray ray, double *maxdist)
@@ -88,13 +86,14 @@ t_intersection		*spheres_cross(t_scene scene, t_ray ray, double *maxdist)
 		{
 			if (intersection == NULL)
 				intersection = malloc(sizeof(t_intersection));
-			*intersection = file_intersection(t, ray, cross->color, cross->matiere);
-			intersection->normal = get_sphere_normal(ray, *cross, intersection->interpos);
-			intersection->object_add =  (void *)cross;
+			*intersection = file_intersection(t, ray, cross->color,
+				cross->matiere);
+			intersection->normal = get_sphere_normal(ray, *cross,
+				intersection->interpos);
+			intersection->object_add = (void *)cross;
 			*maxdist = t;
 		}
 		cross = cross->next;
 	}
 	return (intersection);
 }
-

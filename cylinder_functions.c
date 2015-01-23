@@ -6,13 +6,13 @@
 /*   By: rcargou <rcargou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/18 14:29:15 by rcargou           #+#    #+#             */
-/*   Updated: 2015/01/21 17:21:38 by rcargou          ###   ########.fr       */
+/*   Updated: 2015/01/22 19:24:10 by rcargou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 
-void		newcylinder (t_scene *scene, char **str)
+void				newcylinder(t_scene *scene, char **str)
 {
 	t_cylinder *new;
 
@@ -36,39 +36,38 @@ void		newcylinder (t_scene *scene, char **str)
 	new->next->next = NULL;
 }
 
-double		get_cylinders_t(t_ray ray, t_cylinder cylinder, double maxdist)
+double				get_cylinders_t(t_ray ray, t_cylinder cylinder,
+									double maxdist, t_point tmp)
 {
-	double		a;
-	double		b;
-	double		c;
-	t_point		tmp;
+	double		value[4];
 	t_point		deltap;
-	double		delta;
 
 	tmp = rcm_vecsub(ray.raydir, rcm_vecscalarfactor(cylinder.lign.raydir,
 		rcm_dotproduct(ray.raydir, cylinder.lign.raydir)));
-	a = rcm_dotproduct(tmp, tmp);
+	value[0] = rcm_dotproduct(tmp, tmp);
 	deltap = rcm_vecsub(ray.raypos, cylinder.lign.raypos);
-	b = 2 * rcm_dotproduct(tmp, rcm_vecsub(deltap, rcm_vecscalarfactor(cylinder.lign.raydir,
+	value[1] = 2 * rcm_dotproduct(tmp, rcm_vecsub(deltap,
+		rcm_vecscalarfactor(cylinder.lign.raydir,
 		rcm_dotproduct(deltap, cylinder.lign.raydir))));
-	tmp = (rcm_vecsub(deltap, rcm_vecscalarfactor(cylinder.lign.raydir, rcm_dotproduct(deltap,
-		cylinder.lign.raydir))));
-	c = rcm_dotproduct(tmp, tmp) - cylinder.radius * cylinder.radius;
-	delta  = b * b - 4 * a * c;
-	if (delta == 0 && -b / (2 * a) > 0)
-		return (-b / (2 * a));
-	if (delta > 0)
-	{
-		delta = sqrt(delta);
-		if ((-b + delta) / (2 * a) > 0 && (-b + delta) / (2 * a) < (-b - delta) / (2 * a))
-			return ((-b + delta) / (2 * a));
-		else if (((-b - delta) / (2 * a))  > 0)
-			return ((-b - delta) / (2 * a));
-	}
+	tmp = (rcm_vecsub(deltap, rcm_vecscalarfactor(cylinder.lign.raydir,
+		rcm_dotproduct(deltap, cylinder.lign.raydir))));
+	value[2] = rcm_dotproduct(tmp, tmp) - cylinder.radius * cylinder.radius;
+	value[4] = value[1] * value[1] - 4 * value[0] * value[2];
+	if (value[4] == 0 && -value[1] / (2 * value[0]) > 0)
+		return (-value[1] / (2 * value[0]));
+	if (value[4] == 0)
+		return (maxdist);
+	value[4] = sqrt(value[4]);
+	if ((-value[1] + value[4]) / (2 * value[0]) > 0 && (-value[1] + value[4]) /
+		(2 * value[0]) < (-value[1] - value[4]) / (2 * value[0]))
+		return ((-value[1] + value[4]) / (value[0] * 2));
+	else if (((-value[1] - value[4]) / (2 * value[0])) > 0)
+		return ((-value[1] - value[4]) / (2 * value[0]));
 	return (maxdist);
 }
 
-t_point			get_cylinder_normal(t_ray ray, t_cylinder cylinder, t_point intersection)
+t_point				get_cylinder_normal(t_ray ray, t_cylinder cylinder,
+						t_point intersection)
 {
 	t_point			normal;
 
@@ -81,11 +80,12 @@ int					finite_check(t_cylinder cylinder, double t, t_ray ray)
 {
 	double		dist;
 	t_point		tmp;
-	t_point interpos;
-	t_point narmol;
+	t_point		interpos;
+	t_point		narmol;
 
 	interpos = rcm_vecsum(ray.raypos, rcm_vecscalarfactor(ray.raydir, t));
-	narmol = rcm_vecscalarfactor(get_cylinder_normal(ray, cylinder, interpos), -(cylinder.radius));
+	narmol = rcm_vecscalarfactor(get_cylinder_normal(ray, cylinder,
+		interpos), -(cylinder.radius));
 	tmp = rcm_vecsum(interpos, narmol);
 	dist = rcm_vecnorme(rcm_vecsub(cylinder.lign.raypos, tmp));
 	if (dist > (cylinder.len))
@@ -103,30 +103,19 @@ t_intersection		*cylinder_cross(t_scene scene, t_ray ray, double *maxdist)
 	intersection = NULL;
 	while (cross && cross->next)
 	{
-		t = get_cylinders_t(ray, *cross, *maxdist);
+		t = get_cylinders_t(ray, *cross, *maxdist, ray.raypos);
 		if (t < *maxdist && (finite_check(*cross, t, ray) || cross->len < 0))
 		{
 			if (intersection == NULL)
 				intersection = malloc(sizeof(t_intersection));
-			*intersection = file_intersection(t, ray, cross->color, cross->matiere);
-			intersection->normal = get_cylinder_normal(ray, *cross, intersection->interpos);
-			intersection->object_add =  (void *)cross;
+			*intersection = file_intersection(t, ray, cross->color,
+				cross->matiere);
+			intersection->normal = get_cylinder_normal(ray, *cross,
+				intersection->interpos);
+			intersection->object_add = (void *)cross;
 			*maxdist = t;
 		}
 		cross = cross->next;
 	}
 	return (intersection);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

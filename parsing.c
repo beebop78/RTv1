@@ -6,7 +6,7 @@
 /*   By: rcargou <rcargou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/11 18:59:53 by rcargou           #+#    #+#             */
-/*   Updated: 2015/01/21 18:09:04 by rcargou          ###   ########.fr       */
+/*   Updated: 2015/01/22 18:33:22 by rcargou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,27 @@ static char		*reader(char *path)
 		ft_putendl("Error : invalid input file");
 		exit(0);
 	}
-	if (error == 0)
+	if (error == 0 || !(*str))
 		return (NULL);
 	return (str);
+}
+
+t_scene			select_func(char **splited_str, int len, t_scene new,
+					int *camok)
+{
+	if (!ft_strcmp(splited_str[0], "SPHERE") && len >= 10)
+		newsphere(&new, splited_str);
+	else if (!ft_strcmp(splited_str[0], "SPOT") && len >= 8)
+		*camok += newspot(&new, splited_str);
+	else if (!ft_strcmp(splited_str[0], "PLAN") && len >= 12)
+		newplan(&new, splited_str);
+	else if (!ft_strcmp(splited_str[0], "CAMERA") && len >= 9)
+		*camok += newcamera(&new, splited_str);
+	else if (!ft_strcmp(splited_str[0], "CYLINDER") && len >= 14)
+		newcylinder(&new, splited_str);
+	else if (!ft_strcmp(splited_str[0], "CONE") && len >= 13)
+		newcone(&new, splited_str);
+	return (new);
 }
 
 t_scene			parsing(char *path)
@@ -37,6 +55,7 @@ t_scene			parsing(char *path)
 	char		*str;
 	char		**splited_str;
 	int			camok;
+	int			len;
 
 	camok = 0;
 	new.spheres = NULL;
@@ -46,20 +65,10 @@ t_scene			parsing(char *path)
 	while ((str = reader(path)) != NULL)
 	{
 		splited_str = ft_strsplit(str, ' ');
-		if (!ft_strcmp(splited_str[0], "SPHERE"))
-			newsphere(&new, splited_str);
-		else if (!ft_strcmp(splited_str[0], "SPOT"))
-			newspot(&new, splited_str);
-		else if (!ft_strcmp(splited_str[0], "PLAN"))
-			newplan(&new, splited_str);
-		else if (!ft_strcmp(splited_str[0], "CAMERA"))
-			camok += newcamera(&new, splited_str);
-		else if (!ft_strcmp(splited_str[0], "CYLINDER"))
-			newcylinder(&new, splited_str);
-		else if (!ft_strcmp(splited_str[0], "CONE"))
-			newcone(&new, splited_str);
+		len = ft_tabstrlen(splited_str);
+		new = select_func(splited_str, len, new, &camok);
 	}
-	if (!camok)
+	if (camok < (84))
 		exit(0);
 	return (new);
 }

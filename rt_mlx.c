@@ -6,7 +6,7 @@
 /*   By: rcargou <rcargou@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/01/13 17:30:02 by rcargou           #+#    #+#             */
-/*   Updated: 2015/01/17 16:58:24 by rcargou          ###   ########.fr       */
+/*   Updated: 2015/01/22 18:44:13 by rcargou          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void		ft_put_pxl_img(int x, int y, t_env *env, int color)
 {
 	int p;
 
-	p = x * env->image.bytesperpix / 8 + y * env->image.pixperline;
+	p = x * env->image.bytesperpix / 8 + y * env->image.ppl;
 	if (env->image.endian)
 	{
 		env->image.img_addr[p] = (color & 0xFF0000) >> 16;
@@ -47,10 +47,11 @@ int			display_img(t_env *env)
 void		mlx(t_env env)
 {
 	env.mlx = mlx_init();
-	env.win = mlx_new_window(env.mlx, WIN_X - 10, WIN_Y - 10, "yamete kolasai");
-	env.image.img = mlx_new_image(env.mlx, WIN_X - 10, WIN_Y - 10);
+	env.win = mlx_new_window(env.mlx, WIN_X - 23, WIN_Y - 23,
+		"yamete kudasai !!!");
+	env.image.img = mlx_new_image(env.mlx, WIN_X, WIN_Y);
 	env.image.img_addr = mlx_get_data_addr(env.image.img,
-	&(env.image.bytesperpix), &(env.image.pixperline), &(env.image.endian));
+	&(env.image.bytesperpix), &(env.image.ppl), &(env.image.endian));
 	raytracer(env);
 	mlx_expose_hook(env.win, display_img, &env);
 	mlx_key_hook(env.win, keyhook, &env);
